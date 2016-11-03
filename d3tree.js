@@ -2,8 +2,8 @@
 
 var canvas = d3.select('.d3container').append('svg')
 .style('overflow','scroll')
-.attr('width', 1500)
-.attr('height', 1200)
+.attr('width', '100%')
+.attr('height', '100%')
 .append('g')
 .attr('transform', 'translate(50,50)')
 
@@ -12,14 +12,17 @@ var linkG = canvas.append('g')
 var nodeG = canvas.append('g')
 
 
+var width = window.innerWidth;
+var height = window.innerHeight;
+
 var tree = d3.layout.tree()
-.size([1200, 1200])
+.size([height * .75, width * .65]) //height, width
 .separation(function(a,b){return a.parent == b.parent ? 1 : 2})
+// .size([800, 1000]) //height, width
 
 
 var diagonal = d3.svg.diagonal()
 .projection(function(d){return [d.y,d.x]})
-
 
 d3.select(self.frameElement).style("height", "400px"); //800px
 
