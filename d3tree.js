@@ -1,46 +1,55 @@
 //INITIALIZE TREE
 
+//SET UP CANVAS ON WHICH WE WILL DRAW D3 TREE
 var canvas = d3.select('.d3container').append('svg')
 .style('overflow','scroll')
 .attr('width', '100%')
 .attr('height', '100%')
 .append('g')
-.attr('transform', 'translate(50,50)')
+.attr('transform', 'translate(50,50)') //canvas covers entire page, first G starts at 50 50
 
+
+//DEFINE VARIABLES THAT WILL GROUP LINKS AND NODES
 
 var linkG = canvas.append('g')
 var nodeG = canvas.append('g')
 
 
+//DEFINE WIDTH AND HEIGHT ACCORDING TO CURRENT WINDOW SIZE
+
 var width = window.innerWidth;
 var height = window.innerHeight;
 
-var tree = d3.layout.tree()
-.size([height * .75, width * .65]) //height, width
-.separation(function(a,b){return a.parent == b.parent ? 1 : 2})
-// .size([800, 1000]) //height, width
 
+//DEFINE TREE
+
+var tree = d3.layout.tree()
+.size([height * .80, width * .65]) //height, width
+.separation(function(a,b){return a.parent == b.parent ? 1 : 2})
+// .size([800, 1000])
+
+
+//DEFINE DIAGONAL LINES BETWEEN NODES
 
 var diagonal = d3.svg.diagonal()
 .projection(function(d){return [d.y,d.x]})
-
-d3.select(self.frameElement).style("height", "400px"); //800px
 
 
 //FUNCTION TO TOGGLE TREE EXPANSION AND COMPRESSION
 
 function toggleArtists(d) {
 	if (d.children) {
-		d._children = d.children;
+		d._children = d.children; //TEMPORARILY STORE CHILDREN IN ._CHILDREN TO HIDE
 		d.children = null;
 	} else {
-		d.children = d._children;
+		d.children = d._children; //MOVE CHILDREN BACK INTO .CHILDREN TO SHOW
 		d._children = null;
 	}
 }
 
 //FUNCTION TO TOGGLE BETWEEN SONG PLAYING AND SONG PAUSE
-
+//IN D.PLAY, STORE STATE OF EACH NODE AS PLAYING / NOT PLAYING
+//STORE ARTIST NODE OF CURRENT SONG IN CURRENTSONGD
 var currentSongD;
 function toggleSound(d) {
 	if (currentSongD && currentSongD !== d) currentSongD.play = false;
@@ -59,15 +68,15 @@ function toggleSound(d) {
 
 function updateD3Graph(artistTree, currentNode){
 	
-	var nodes = tree.nodes(artistTree);
-	var links = tree.links(nodes);
+	var nodes = tree.nodes(artistTree); //PASS IN ARTIST TREE WITH UDPATED DATA TO REDEFINE NODES
+	var links = tree.links(nodes); //REDEFINE LINKS BASED ON NEW NODES
 
-	var node = nodeG.selectAll('.node')
+	var node = nodeG.selectAll('.node') //DEFINE GROUP OF ALL NODES
 		.data(nodes, function(d){return d.id})
 
-    node.attr('transform', function(d){return 'translate(' + d.y + ',' + d.x + ')'}) //update selection
+    node.attr('transform', function(d){return 'translate(' + d.y + ',' + d.x + ')'}) //UPDATE SELECTION
 		
-    node.select('image.song') //update the play and pause icons
+    node.select('image.song') //UPDATE THE PLAY AND PAUSE ICONS
     	.attr('xlink:href', function(d){
 	    	if (d.play === undefined || d.play === false) {
 	    		d.play = false;
@@ -76,15 +85,14 @@ function updateD3Graph(artistTree, currentNode){
 	    	else if (d.play === true) return 'pauseimage.png'
     	})
 	
-	var nodeEnter = node.enter()
+	var nodeEnter = node.enter() //DEFINE ENTER
             .append('g')
             .attr('class','node')
             .attr('id', function(d){return d.id})
             .attr('transform', function(d){return 'translate(' + d.y + ',' + d.x + ')'})
 
 
-
-    nodeEnter.append('image') //album image
+    nodeEnter.append('image') //ON ENTER, ADD ALBUM IMAGE TO THE NODE
         .attr('class','album')
         .attr('xlink:href', function(d){return d.data.image.url})
         .attr('x','-12px')
@@ -104,13 +112,14 @@ function updateD3Graph(artistTree, currentNode){
         	}
         	else selectNextRelevantArtist(d.id, currentNode) // 3. fetch the data and expand
         })
+        // .append('title').text(function(d){return d.data.name})
 
 
-    nodeEnter.append('image') //play-pause icon
+    nodeEnter.append('image') //ON ENTER, ADD PLAY-PAUSE ICON TO THE NODE
         .attr('class','song')
         .attr('xlink:href', 'playimage.png')
-        .attr('x','35px')
-        .attr('y','5px')
+        .attr('x','-50px')
+        .attr('y','-8px')
         .attr('width','35px')
         .attr('height','35px')
         .on('click', function(d){ //on clicking the icon, start playing song, or pause song
@@ -119,29 +128,30 @@ function updateD3Graph(artistTree, currentNode){
         })    
 
 
-    nodeEnter.append('text') //artist names appended to tree
+    nodeEnter.append('text') //ON ENTER, APPEND ARTIST NAME TO THE NODE
         .text((d)=>{ return d.data.name })
-        .attr('x','40px')
+        .attr('x','30px')
+        .attr('y','10px')
         .style('font-size', '22px')
 
 
     var link = linkG.selectAll('.link')
-        .data(links, function(d){return d.source.id + '-' + d.target.id}) //connect existing to new (links via node id), otherwise done via index
+        .data(links, function(d){return d.source.id + '-' + d.target.id}) //CONNECT EXISTING TO NEW (LINKS VIA NODE ID)
         
-    link.enter()
+    link.enter() //DEFINE LINK ENTER
 	    .append('path')
 	    .attr('class','link')
 	    .attr('fill','none')
 	    .attr('stroke','#ADADAD')
 
-    link.attr('d', diagonal)
+    link.attr('d', diagonal) //USE DIAGONAL FOR LINKS
 
-    var nodeExit = node.exit()
+    var nodeExit = node.exit() //DEFINE NODE EXIT
         .transition()
         .attr('transform', function(d){return 'translate(' + d.y + ',' + d.x + ')'})
         .remove()
 
-    var linkExit = link.exit()
+    var linkExit = link.exit() //DEFINE LINK EXIT
         .transition()
         .attr('d', function(d){
         	var o = {x: d.source.x, y: d.source.y}
@@ -149,7 +159,7 @@ function updateD3Graph(artistTree, currentNode){
         })
         .remove()
 
-    nodes.forEach((d)=>{
+    nodes.forEach((d)=>{ //DEFINE SPACING
         d.y = d.depth * 90
     })
 
