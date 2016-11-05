@@ -133,6 +133,19 @@ function updateD3Graph(artistTree, currentNode){
         .attr('x','30px')
         .attr('y','10px')
         .style('font-size', '22px')
+        .on('click', function(d){  //on clicking the album, there are 3 options:
+            if (d._children) { // 1. expand the data
+                toggleArtists(d)
+                updateD3Graph(artistTree, currentNode)
+                return;
+            }
+            if (d.children) { // 2. compress the data
+                toggleArtists(d)
+                updateD3Graph(artistTree, currentNode)
+                return;
+            }
+            else selectNextRelevantArtist(d.id, currentNode) // 3. fetch the data and expand
+        })
 
 
     var link = linkG.selectAll('.link')
