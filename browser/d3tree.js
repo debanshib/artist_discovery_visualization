@@ -1,39 +1,42 @@
+var canvas, tree, linkG, nodeG, diagonal;
+
 //INITIALIZE TREE
+var initializeTree = function(){
+    console.log('in initializeTree')
+    //SET UP CANVAS ON WHICH WE WILL DRAW D3 TREE
+    canvas = d3.select('.d3container').append('svg')
+        .style('overflow','scroll')
+        .attr('width', '100%')
+        .attr('height', '100%')
+        .append('g')
+        .attr('transform', 'translate(50,50)') //canvas covers entire page, first G starts at 50 50
+    // }
 
-//SET UP CANVAS ON WHICH WE WILL DRAW D3 TREE
-var canvas = d3.select('.d3container').append('svg')
-.style('overflow','scroll')
-.attr('width', '100%')
-.attr('height', '100%')
-.append('g')
-.attr('transform', 'translate(50,50)') //canvas covers entire page, first G starts at 50 50
+    //DEFINE VARIABLES THAT WILL GROUP LINKS AND NODES
 
-
-//DEFINE VARIABLES THAT WILL GROUP LINKS AND NODES
-
-var linkG = canvas.append('g')
-var nodeG = canvas.append('g')
-
-
-//DEFINE WIDTH AND HEIGHT ACCORDING TO CURRENT WINDOW SIZE
-
-var width = window.innerWidth;
-var height = window.innerHeight;
+    linkG = canvas.append('g')
+    nodeG = canvas.append('g')
 
 
-//DEFINE TREE
+    //DEFINE WIDTH AND HEIGHT ACCORDING TO CURRENT WINDOW SIZE
 
-var tree = d3.layout.tree()
-.size([height * .80, width * .65]) //height, width
-.separation(function(a,b){return a.parent == b.parent ? 1 : 2})
-// .size([800, 1000])
+    var width = window.innerWidth;
+    var height = window.innerHeight;
 
 
-//DEFINE DIAGONAL LINES BETWEEN NODES
+    //DEFINE TREE
 
-var diagonal = d3.svg.diagonal()
-.projection(function(d){return [d.y,d.x]})
+    tree = d3.layout.tree()
+    .size([height * .80, width * .65]) //height, width
+    .separation(function(a,b){return a.parent == b.parent ? 1 : 2})
+    // .size([800, 1000])
 
+
+    //DEFINE DIAGONAL LINES BETWEEN NODES
+
+    diagonal = d3.svg.diagonal()
+    .projection(function(d){return [d.y,d.x]})
+}
 
 //FUNCTION TO TOGGLE TREE EXPANSION AND COMPRESSION
 

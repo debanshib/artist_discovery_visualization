@@ -4,10 +4,16 @@ var pastArtists = [];
 
 
 //GET DATA FROM FORM FOR INITIAL ARTIST
-document.getElementById('search-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    searchArtists(document.getElementById('query').value);
-}, false);
+window.onload = function() {
+    initializeTree();
+    console.log('search-form', document.getElementById('search'))
+    console.log('query', document.getElementById('query'))
+  document.getElementById('search-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        console.log('clicked with query,', document.getElementById('query').value)
+        searchArtists(document.getElementById('query').value);
+    }, false);
+}
 
 
 //FETCH INITIAL ARTIST AND FIND SIMILAR ARTISTS
