@@ -26,6 +26,7 @@ var initializeTree = function(){
 
     //DEFINE TREE
 
+    // tree = d3.tree()
     tree = d3.layout.tree()
     .size([height * .80, width * .65]) //height, width
     .separation(function(a,b){return a.parent == b.parent ? 1 : 2})
@@ -33,7 +34,6 @@ var initializeTree = function(){
 
 
     //DEFINE DIAGONAL LINES BETWEEN NODES
-
     diagonal = d3.svg.diagonal()
     .projection(function(d){return [d.y,d.x]})
 }

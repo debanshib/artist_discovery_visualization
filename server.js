@@ -14,11 +14,8 @@ app.get('/', function(req, res, next){
 	res.sendFile(path.join(__dirname + '/index.html'))
 })
 
-var port = 3000;
-app.listen(port, function() {
-    console.log('SERVER listening on port: ' + port);
-});
 
 app.listen(process.env.PORT || 3000, function(){
   console.log("SERVER listening on port", this.address().port, app.settings.env);
+   // console.log("SERVER listening on port");
 });
