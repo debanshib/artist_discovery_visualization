@@ -2,7 +2,7 @@ var canvas, tree, linkG, nodeG, diagonal;
 
 //INITIALIZE TREE
 var initializeTree = function(){
-    console.log('in initializeTree')
+    
     //SET UP CANVAS ON WHICH WE WILL DRAW D3 TREE
     canvas = d3.select('.d3container').append('svg')
         .style('overflow','scroll')
@@ -13,20 +13,16 @@ var initializeTree = function(){
     // }
 
     //DEFINE VARIABLES THAT WILL GROUP LINKS AND NODES
-
     linkG = canvas.append('g')
     nodeG = canvas.append('g')
 
 
     //DEFINE WIDTH AND HEIGHT ACCORDING TO CURRENT WINDOW SIZE
-
     var width = window.innerWidth;
     var height = window.innerHeight;
 
 
     //DEFINE TREE
-
-    // tree = d3.tree()
     tree = d3.layout.tree()
     .size([height * .80, width * .65]) //height, width
     .separation(function(a,b){return a.parent == b.parent ? 1 : 2})

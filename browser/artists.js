@@ -6,11 +6,8 @@ var pastArtists = [];
 //GET DATA FROM FORM FOR INITIAL ARTIST
 window.onload = function() {
     initializeTree();
-    console.log('search-form', document.getElementById('search'))
-    console.log('query', document.getElementById('query'))
-  document.getElementById('search-form').addEventListener('submit', function (e) {
+    document.getElementById('search-form').addEventListener('submit', function (e) {
         e.preventDefault();
-        console.log('clicked with query,', document.getElementById('query').value)
         searchArtists(document.getElementById('query').value);
     }, false);
 }
@@ -73,7 +70,6 @@ var fetchRelevantArtists = function(artistId, currentNode){
                 if (currentNode['children']) currentNode['children'].push(object)
                 else currentNode['children'] = [object]
             })
-            console.log('updated artistTree', artistTree)
             //UPDATE VISUALIZATION BASED ON NEW DATA
             updateD3Graph(artistTree, currentNode) 
         }
